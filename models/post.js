@@ -10,7 +10,7 @@ const PostSchema = new Schema({
 	lat: Number,
 	lng: Number,
 	author: {
-		type: Schema.Types.Objectid,
+		type: Schema.Types.ObjectId,
 		ref: 'User'
 	},
 	reviews: [
@@ -21,4 +21,4 @@ const PostSchema = new Schema({
 	]
 });
 
-module.exports = mongoose.model('Post', UserSchema);
+module.exports = mongoose.model('Post', PostSchema);
