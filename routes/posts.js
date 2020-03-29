@@ -1,37 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const { errorHandler } = require('../middleware');
-const { getPosts, newPost } = require('../controllers/posts');
+const { asynErrorHandler } = require('../middleware');
+const { 
+	postIndex,
+	postNew,
+	postCreate,
+	postShow,
+	postEdit,
+	postUpdate,
+	postDestroy 
+} = require('../controllers/posts');
 
 /* GET posts index /posts */
-router.get('/', errorHandler(getPosts));
+router.get('/', asynErrorHandler(postIndex));
 
 /* GET posts new /posts/new */
-router.get('/new', newPost);
+router.get('/new', postNew);
 
 /* POST posts create /posts */
-router.post('/', (req, res, next) => {
-  res.send("CREATE /posts");
-});
+router.post('/', asynErrorHandler(postCreate));
 
 /* GET posts show /posts/:id */
-router.get('/:id', (req, res, next) => {
-  res.send("SHOW /posts/:id");
-});
+router.get('/:id', asynErrorHandler(postShow));
 
 /* GET posts edit /posts/:id/edit */
-router.get('/:id/edit', (req, res, next) => {
-  res.send("EDIT /posts/:id/edit");
-});
+router.get('/:id/edit', asynErrorHandler(postEdit));
 
 /* PUT posts update /posts/:id/ */
-router.put('/:id', (req, res, next) => {
-  res.send("UPDATE /posts/:id");
-});
+router.put('/:id', asynErrorHandler(postUpdate));
 
 /* DELETE posts destroy /posts/:id/ */
-router.delete('/:id', (req, res, next) => {
-  res.send("DELETE /posts/:id");
-});
+router.delete('/:id', asynErrorHandler(postDestroy));
 
 module.exports = router;
