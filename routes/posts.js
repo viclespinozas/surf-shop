@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const upload = multer({'dest': 'uploads/'});
 const { asynErrorHandler } = require('../middleware');
 const { 
 	postIndex,
@@ -18,7 +20,7 @@ router.get('/', asynErrorHandler(postIndex));
 router.get('/new', postNew);
 
 /* POST posts create /posts */
-router.post('/', asynErrorHandler(postCreate));
+router.post('/', upload.array('images', 4), asynErrorHandler(postCreate));
 
 /* GET posts show /posts/:id */
 router.get('/:id', asynErrorHandler(postShow));
