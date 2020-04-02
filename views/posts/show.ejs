@@ -1,3 +1,37 @@
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: relative; width: 700px; height: 500px; }
+</style>
+<style>
+	.coordinates {
+		background: rgba(0, 0, 0, 0.5);
+		color: #fff;
+		position: absolute;
+		bottom: 40px;
+		left: 10px;
+		padding: 5px 10px;
+		margin: 0;
+		font-size: 11px;
+		line-height: 18px;
+		border-radius: 3px;
+		display: none;
+	}
+	#marker {
+		background-image: url('https://docs.mapbox.com/mapbox-gl-js/assets/washington-monument.jpg');
+		background-size: cover;
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
+		cursor: pointer;
+	}
+
+	.mapboxgl-popup {
+		max-width: 200px;
+	}
+</style>
+
 <h1><%= post.title %></h1>
 <div>Price: <%= post.price %></div>
 <div><%= post.description %></div>
@@ -7,6 +41,7 @@
 		<img src="<%= image.url %>" alt="Surf board shop" width="200">
 	<% }); %>
 </div>
+<div id="map"></div>
 <div>
 	<a href="/posts/<%= post.id %>/edit">
 		<button>Edit</button>
@@ -17,3 +52,36 @@
 		<input type="submit" value="Delete">
 	</form>
 </div>
+
+<script>
+	var post = <%- JSON.stringify(post) %>;
+	mapboxgl.accessToken = 'pk.eyJ1IjoidmljdG9ybGVzcGlub3phcyIsImEiOiJjazhpbzFpdnEwM3hkM2VrMmg0bTUxeTVlIn0.iDffThlehPykR3aUx3nobg';
+	var coordinates = document.getElementById('coordinates');
+	var map = new mapboxgl.Map({
+		container: 'map',
+		style: 'mapbox://styles/mapbox/streets-v11',
+		center: post.coordinates,
+		zoom: 10
+	});
+
+	// create the popup
+	var popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+		'<p>' + post.title + '</p> ' + '<p>' + post.description + '</p>'
+	);
+
+	var marker = new mapboxgl.Marker({
+		draggable: true
+	})
+	.setLngLat(post.coordinates)
+	.setPopup(popup)
+	.addTo(map);
+
+	function onDragEnd() {
+		var lngLat = marker.getLngLat();
+		coordinates.style.display = 'block';
+		coordinates.innerHTML =
+		'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
+	}
+
+	marker.on('dragend', onDragEnd);
+</script>
