@@ -29,7 +29,7 @@ router.get('/:id', asynErrorHandler(postShow));
 router.get('/:id/edit', asynErrorHandler(postEdit));
 
 /* PUT posts update /posts/:id/ */
-router.put('/:id', asynErrorHandler(postUpdate));
+router.put('/:id', upload.array('images', 4), asynErrorHandler(postUpdate));
 
 /* DELETE posts destroy /posts/:id/ */
 router.delete('/:id', asynErrorHandler(postDestroy));
