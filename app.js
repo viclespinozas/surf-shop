@@ -55,6 +55,21 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//title middleware
+app.use(function(req, res, next) {
+  req.user = {
+    '_id' : '5e7dd2792801d822577fa9d6',
+    'username' : 'cassie'
+  }
+  res.locals.currentUser = req.user;
+  res.locals.title = 'Surf Shop';
+  res.locals.success = req.session.success || '';
+  delete req.session.success;
+  res.locals.error = req.session.error || '';
+  delete req.session.error;
+  next();
+});
+
 //Mount routes
 app.use('/', indexRouter);
 app.use('/posts', postsRouter);
@@ -67,13 +82,15 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // // set locals, only providing error in development
+  // res.locals.message = err.message;
+  // res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // // render the error page
+  // res.status(err.status || 500);
+  // res.render('error');
+  req.session.error = err.message;
+  res.redirect('back');
 });
 
 module.exports = app;
