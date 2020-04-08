@@ -27,3 +27,9 @@ function onDragEnd() {
 }
 
 marker.on('dragend', onDragEnd);
+
+// Toggle review edit form
+$('.toggle-edit-form').on('click', function() {
+	$(this).text() === 'Edit' ? $(this).text('Cancel') : $(this).text('Edit');
+	$(this).siblings('.edit-review-form').toggle();
+});
