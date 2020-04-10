@@ -3,7 +3,7 @@ var coordinates = document.getElementById('coordinates');
 var map = new mapboxgl.Map({
 	container: 'map',
 	style: 'mapbox://styles/mapbox/streets-v11',
-	center: post.coordinates,
+	center: post.geometry.coordinates,
 	zoom: 10
 });
 
@@ -15,7 +15,7 @@ var popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
 var marker = new mapboxgl.Marker({
 	draggable: true
 })
-.setLngLat(post.coordinates)
+.setLngLat(post.geometry.coordinates)
 .setPopup(popup)
 .addTo(map);
 

@@ -17,7 +17,11 @@ module.exports = {
 			limit: 10
 		});
 		posts.page = Number(posts.page);
-		res.render('posts/index', { posts: posts, title: 'Post Index' });
+		res.render('posts/index', {
+			posts: posts,
+			title: 'Post Index',
+			mapboxToken: process.env.MAPBOX_TOKEN
+		});
 	},
 
 	postNew(req, res, next) {
