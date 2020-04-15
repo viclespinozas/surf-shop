@@ -16,14 +16,11 @@ async function seedPosts() {
 				type: 'Point',
 				coordinates: [cities[random1000].longitude, cities[random1000].latitude],
 			},
-			author: {
-		    '_id' : '5e7dd2792801d822577fa9d6',
-		    'username' : 'cassie'
-		  }
+			author: '5e7dd2792801d822577fa9d6'
 		}
 		let post = new Post(postData);
 		post.properties.description = `<strong><a href="/posts/${post._id}">${title}</a></strong><p>${post.location}</p><p>${description.substring(0, 20)}...</p>`;
-		post.save();
+		await post.save();
 	}
 	console.log('600 new posts created');
 }

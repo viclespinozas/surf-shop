@@ -23,7 +23,11 @@ const reviewsRouter = require('./routes/reviews');
 const app = express();
 
 //connect to database
-mongoose.connect('mongodb://localhost:27017/surf-shop', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/surf-shop', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+});
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error: '));
@@ -37,6 +41,7 @@ app.set('view engine', 'ejs');
 // set public assets directory
 app.use(express.static('public'));
 
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -59,10 +64,10 @@ passport.deserializeUser(User.deserializeUser());
 
 //title middleware
 app.use(function(req, res, next) {
-  req.user = {
-    '_id' : '5e7dd2792801d822577fa9d6',
-    'username' : 'cassie'
-  }
+  // req.user = {
+  //   '_id' : '5e7dd2792801d822577fa9d6',
+  //   'username' : 'cassie'
+  // }
   res.locals.currentUser = req.user;
   res.locals.title = 'Surf Shop';
   res.locals.success = req.session.success || '';
