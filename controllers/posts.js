@@ -68,7 +68,6 @@ module.exports = {
 
 	async postUpdate(req, res, next) {
 		// find the post by id
-		// let post = await Post.findById(req.params.id);
 		const { post } = res.locals;
 		// check if there is any image for deletion
 		if (req.body.deleteImages && req.body.deleteImages.length) {
@@ -115,7 +114,7 @@ module.exports = {
 		post.price = req.body.post.price;
 		post.properties.description = `<strong><a href="/posts/${post._id}">${post.title}</a></strong><p>${post.location}</p><p>${post.description.substring(0, 20)}...</p>`;
 		// save the updated post into the db
-		post.save();
+		await post.save();
 		// redirect to show page
 		res.redirect(`/posts/${post.id}`);
 	},
