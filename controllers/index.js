@@ -2,6 +2,8 @@ const User = require('../models/user');
 const Post = require('../models/post');
 const passport = require('passport');
 const util = require('util');
+const { cloudinary } = require('../cloudinary');
+const { deleteProfileImage } = require('../middleware');
 
 module.exports = {
 	async landingPage(req, res, next) {
@@ -19,6 +21,13 @@ module.exports = {
 
 	async postRegister(req, res, next) {
 		try {
+			if (req.file) {
+				const { secure_url, public_id } = req.file;
+				req.body.image = {
+					secure_url,
+					public_id
+				}
+			}
 			const user = await User.register(new User(req.body), req.body.password);
 			req.login(user, function(err) {
 				if (err) return next(err);
@@ -26,12 +35,13 @@ module.exports = {
 				res.redirect('/');
 			});
 		} catch(err) {
+			deleteProfileImage(req);
 			const { username, email } = req.body;
 			let error = err.message;
 			if (error.includes('duplicate') && error.includes('index: email_1 dup key')) {
 				error = 'A user with the given email is already registered';
 			}
-			res.render('register', { title: 'Register', username, email, error })
+			res.render('register', { title: 'Register', username, email, error });
 		}
 	},
 
@@ -67,23 +77,21 @@ module.exports = {
 	},
 
 	async updateProfile(req, res, next) {
-		// destructure username and email from req.body
 		const {
 			username,
 			email
 		} = req.body;
-		// destructure user object from res.locals
 		const { user } = res.locals;
-		// check if username or email need to be updated
 		if (username) user.username = username;
 		if (email) user.email = email;
-		// save the updated user to the database
+		if (req.file) {
+			if (user.image.public_id) await cloudinary.v2.uploader.destroy(user.image.public_id);
+			const { secure_url, public_id } = req.file;
+			user.image = { secure_url, public_id };
+		}
 		await user.save();
-		// promsify req.login
 		const login = util.promisify(req.login.bind(req));
-		// log the user back in with new info
 		await login(user);
-		// redirect to /profile with a success flash message
 		req.session.success = 'Profile successfully updated!';
 		res.redirect('/profile');
 	}
