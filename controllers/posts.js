@@ -7,7 +7,9 @@ const { cloudinary } = require('../cloudinary');
 
 module.exports = {
 	async postIndex(req, res, next) {
-		let posts = await Post.paginate({}, {
+		const { dbQuery } = res.locals;
+		delete res.locals.dbQuery;
+		let posts = await Post.paginate(dbQuery, {
 			page: req.query.page || 1,
 			limit: 10,
 			sort: {
@@ -15,6 +17,9 @@ module.exports = {
 			}
 		});
 		posts.page = Number(posts.page);
+		if (!posts.docs.length && res.locals.query) {
+			res.locals.error = 'No results match that query.';
+		}
 		res.render('posts/index', {
 			posts: posts,
 			title: 'Post Index',
@@ -58,7 +63,8 @@ module.exports = {
 				model: 'User'
 			}
 		});
-		const floorRating = post.calculateAvgRating();
+		// const floorRating = post.calculateAvgRating();
+		const floorRating = post.avgRating;
 		res.render('posts/show', { post, floorRating });
 	},
 
