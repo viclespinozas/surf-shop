@@ -10,10 +10,12 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = {
 	async landingPage(req, res, next) {
-		const posts = await Post.find({});
+		const posts = await Post.find({}).sort('-_id').exec();
+		const recentPosts = posts.slice(0, 3);
 		res.render('index', { 
 			posts,
 			mapBoxToken: process.env.MAPBOX_TOKEN,
+			recentPosts,
 			title: 'Surf-Shop Home'
 		});
 	},
