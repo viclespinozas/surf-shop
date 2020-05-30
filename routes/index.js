@@ -3,25 +3,25 @@ const router = express.Router();
 const multer = require('multer');
 const { storage } = require('../cloudinary');
 const upload = multer({ storage });
-const { 
-	landingPage,
-  getRegister,
-	postRegister,
-  getLogin,
-	postLogin,
-	getLogout,
-  getProfile,
-  updateProfile,
-  getForgotPw,
-  putForgotPw,
-  getReset,
-  putReset
+const {
+    landingPage,
+    getRegister,
+    postRegister,
+    getLogin,
+    postLogin,
+    getLogout,
+    getProfile,
+    updateProfile,
+    getForgotPw,
+    putForgotPw,
+    getReset,
+    putReset
 } = require('../controllers');
 const {
-  asyncErrorHandler,
-  isLoggedIn,
-  isValidPassword,
-  changePassword
+    asyncErrorHandler,
+    isLoggedIn,
+    isValidPassword,
+    changePassword
 } = require('../middleware')
 
 /* GET home page. */
@@ -46,11 +46,11 @@ router.get('/profile', isLoggedIn, asyncErrorHandler(getProfile));
 
 /* PUT profile/:user_id. */
 router.put('/profile',
-  isLoggedIn,
-  upload.single('image'),
-  asyncErrorHandler(isValidPassword),
-  asyncErrorHandler(changePassword),
-  asyncErrorHandler(updateProfile)
+    isLoggedIn,
+    upload.single('image'),
+    asyncErrorHandler(isValidPassword),
+    asyncErrorHandler(changePassword),
+    asyncErrorHandler(updateProfile)
 );
 
 /* GET /forgot-pw. */
